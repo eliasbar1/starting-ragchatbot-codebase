@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     createNewSession();
     loadCourseStats();
+    document.getElementById('newChatBtn').addEventListener('click', createNewSession);
 });
 
 // Event Listeners
@@ -125,7 +126,7 @@ function addMessage(content, type, sources = null, isWelcome = false) {
         html += `
             <details class="sources-collapsible">
                 <summary class="sources-header">Sources</summary>
-                <div class="sources-content">${sources.join(', ')}</div>
+                <div class="sources-content">${sources.map(s => { const [text, url] = s.split('||'); return url ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>` : escapeHtml(text); }).join(' ')}</div>
             </details>
         `;
     }

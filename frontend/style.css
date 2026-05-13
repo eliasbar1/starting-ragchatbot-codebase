@@ -241,8 +241,29 @@ header h1 {
 }
 
 .sources-content {
-    padding: 0 0.5rem 0.25rem 1.5rem;
+    padding: 0.25rem 0.5rem 0.25rem 1.5rem;
     color: var(--text-secondary);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.sources-content a {
+    display: inline-block;
+    color: #a8c7fa;
+    background: rgba(168, 199, 250, 0.1);
+    border: 1px solid rgba(168, 199, 250, 0.25);
+    border-radius: 0.75rem;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.72rem;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.sources-content a:hover {
+    background: rgba(168, 199, 250, 0.2);
+    border-color: rgba(168, 199, 250, 0.5);
+    color: #c8dcff;
 }
 
 /* Markdown formatting styles */
@@ -446,6 +467,7 @@ header h1 {
 }
 
 /* Sidebar Headers */
+.new-chat-btn,
 .stats-header,
 .suggested-header {
     font-size: 0.875rem;
@@ -462,11 +484,23 @@ header h1 {
     letter-spacing: 0.5px;
 }
 
+.new-chat-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.new-chat-btn:focus,
 .stats-header:focus,
 .suggested-header:focus {
     color: var(--primary-color);
 }
 
+.new-chat-btn:hover,
 .stats-header:hover,
 .suggested-header:hover {
     color: var(--primary-color);
