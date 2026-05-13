@@ -16,11 +16,51 @@ document.addEventListener('DOMContentLoaded', () => {
   totalCourses = document.getElementById('totalCourses');
   courseTitles = document.getElementById('courseTitles');
 
+  setupThemeToggle();
   setupEventListeners();
   createNewSession();
   loadCourseStats();
   document.getElementById('newChatBtn').addEventListener('click', createNewSession);
 });
+
+// Theme Toggle
+function setupThemeToggle() {
+    const toggle = document.getElementById('themeToggle');
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+
+    function applyTheme(theme, animate) {
+        if (!animate) {
+            document.documentElement.classList.add('no-theme-transition');
+        }
+        // Single data-theme attribute on <html> drives all CSS variable overrides.
+        document.documentElement.setAttribute('data-theme', theme);
+        toggle.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+        if (!animate) {
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                document.documentElement.classList.remove('no-theme-transition');
+            }));
+        }
+    }
+
+    // On load: saved preference → OS preference → dark.
+    const initial = localStorage.getItem('chatbot-theme') ?? (mq.matches ? 'light' : 'dark');
+    applyTheme(initial, false);
+
+    // Click: read the current attribute, flip it, persist.
+    toggle.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('chatbot-theme', theme);
+        toggle.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+    });
+
+    // Follow OS changes only when the user has no saved manual preference.
+    mq.addEventListener('change', (e) => {
+        if (!localStorage.getItem('chatbot-theme')) {
+            applyTheme(e.matches ? 'light' : 'dark', true);
+        }
+    });
+}
 
 // Event Listeners
 function setupEventListeners() {
