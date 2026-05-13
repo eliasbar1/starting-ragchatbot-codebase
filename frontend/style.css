@@ -5,23 +5,177 @@
     padding: 0;
 }
 
-/* CSS Variables */
+/* CSS Variables — Dark Mode (default) */
 :root {
+    /* Brand */
     --primary-color: #2563eb;
     --primary-hover: #1d4ed8;
+
+    /* Surfaces */
     --background: #0f172a;
     --surface: #1e293b;
     --surface-hover: #334155;
+
+    /* Text */
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
+
+    /* Borders & decoration */
     --border-color: #334155;
-    --user-message: #2563eb;
-    --assistant-message: #374151;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     --radius: 12px;
     --focus-ring: rgba(37, 99, 235, 0.2);
+
+    /* Chat messages */
+    --user-message: #2563eb;
+    --assistant-message: #374151;
+
+    /* Welcome card */
     --welcome-bg: #1e3a5f;
     --welcome-border: #2563eb;
+    --welcome-shadow: rgba(0, 0, 0, 0.2);
+
+    /* Code blocks */
+    --code-bg: rgba(0, 0, 0, 0.25);
+
+    /* Source link chips */
+    --source-link-color: #a8c7fa;
+    --source-link-bg: rgba(168, 199, 250, 0.1);
+    --source-link-border: rgba(168, 199, 250, 0.25);
+    --source-link-hover-bg: rgba(168, 199, 250, 0.2);
+    --source-link-hover-color: #c8dcff;
+    --source-link-hover-border: rgba(168, 199, 250, 0.5);
+}
+
+/* CSS Variables — Light Mode
+   A single selector on the root element covers both the inline head-script FOUC
+   prevention (which sets the attribute immediately) and the JS toggle (which updates
+   the same attribute). No class handoff or duplicate selector required. */
+html[data-theme="light"] {
+    /* Surfaces */
+    --background: #f8fafc;
+    --surface: #ffffff;
+    --surface-hover: #f1f5f9;
+
+    /* Text */
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+
+    /* Borders & decoration */
+    --border-color: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    --focus-ring: rgba(37, 99, 235, 0.15);
+
+    /* Chat messages */
+    --user-message: #2563eb;
+    --assistant-message: #f1f5f9;
+
+    /* Welcome card */
+    --welcome-bg: #eff6ff;
+    --welcome-border: #93c5fd;
+    --welcome-shadow: rgba(0, 0, 0, 0.06);
+
+    /* Code blocks */
+    --code-bg: #eef2f7;
+
+    /* Source link chips — darker blue for contrast on white */
+    --source-link-color: #1d4ed8;
+    --source-link-bg: rgba(37, 99, 235, 0.06);
+    --source-link-border: rgba(37, 99, 235, 0.2);
+    --source-link-hover-bg: rgba(37, 99, 235, 0.12);
+    --source-link-hover-color: #1e40af;
+    --source-link-hover-border: rgba(37, 99, 235, 0.4);
+}
+
+/* Suppress transitions while the initial theme is being applied (prevents FOUC animation) */
+html.no-theme-transition *,
+html.no-theme-transition *::before,
+html.no-theme-transition *::after {
+    transition: none !important;
+}
+
+/* Smooth theme transitions */
+body,
+body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    padding: 0;
+    /* Explicit transition so transform (scale) animates on hover/active in addition to
+       the color/bg properties covered by the body * rule. */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+                box-shadow 0.3s ease, transform 0.15s ease;
+}
+
+.theme-toggle:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.theme-toggle:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.theme-toggle:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle-icons {
+    position: relative;
+    width: 18px;
+    height: 18px;
+}
+
+.icon-moon,
+.icon-sun {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.35s ease, transform 0.4s ease;
+}
+
+.icon-moon {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+.icon-sun {
+    opacity: 0;
+    transform: rotate(90deg);
+}
+
+html[data-theme="light"] .icon-moon {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+html[data-theme="light"] .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg);
 }
 
 /* Base Styles */
@@ -250,20 +404,20 @@ header h1 {
 
 .sources-content a {
     display: inline-block;
-    color: #a8c7fa;
-    background: rgba(168, 199, 250, 0.1);
-    border: 1px solid rgba(168, 199, 250, 0.25);
+    color: var(--source-link-color);
+    background: var(--source-link-bg);
+    border: 1px solid var(--source-link-border);
     border-radius: 0.75rem;
     padding: 0.2rem 0.65rem;
     font-size: 0.72rem;
     text-decoration: none;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .sources-content a:hover {
-    background: rgba(168, 199, 250, 0.2);
-    border-color: rgba(168, 199, 250, 0.5);
-    color: #c8dcff;
+    background: var(--source-link-hover-bg);
+    border-color: var(--source-link-hover-border);
+    color: var(--source-link-hover-color);
 }
 
 /* Markdown formatting styles */
@@ -298,7 +452,7 @@ header h1 {
 }
 
 .message-content code {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--code-bg);
     padding: 0.125rem 0.25rem;
     border-radius: 3px;
     font-family: 'Fira Code', 'Consolas', monospace;
@@ -306,7 +460,7 @@ header h1 {
 }
 
 .message-content pre {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--code-bg);
     padding: 0.75rem;
     border-radius: 4px;
     overflow-x: auto;
@@ -319,7 +473,7 @@ header h1 {
 }
 
 .message-content blockquote {
-    border-left: 3px solid var(--primary);
+    border-left: 3px solid var(--primary-color);
     padding-left: 1rem;
     margin: 0.5rem 0;
     color: var(--text-secondary);
@@ -327,9 +481,9 @@ header h1 {
 
 /* Welcome message special styling */
 .message.welcome-message .message-content {
-    background: var(--surface);
-    border: 2px solid var(--border-color);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    background: var(--welcome-bg);
+    border: 2px solid var(--welcome-border);
+    box-shadow: 0 4px 16px var(--welcome-shadow);
     position: relative;
 }
 
